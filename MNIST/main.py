@@ -14,7 +14,8 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback
 
-from model_with_channel_conditioning import DCGANLikeModelWithChannelConditioning
+from CIGN_channel.model_with_channel_conditioning import CIGNWithChannelConditioning
+from CIGN_filter.model_with_filter_conditioning import CIGNWithFilterConditioning
 from idempotent_networks import IdempotentNetworkWithConditioning
 
 
@@ -28,6 +29,7 @@ def argument_parser():
     parser.add_argument('-b', '--batch-size', type=int, help='Batch size', default=256)
     parser.add_argument('-e', '--num-epochs', type=int, help='Number of training epochs', default=100)
     parser.add_argument('-w', '--num-workers', type=int, help='Number of workers to use during training', default=0)
+    parser.add_argument('-c', '--conditioning', type=str, help='Conditioning approach', default='channel')
     parser.add_argument('-d', '--download', help='Download the dataset from source', action='store_true')
     return parser.parse_args()
 
@@ -75,10 +77,20 @@ def initialize_model(args):
     # Initialize model
     prior = torch.distributions.Normal(torch.zeros(1, args.image_size, args.image_size), 
                                        torch.ones(1, args.image_size, args.image_size))
-    net = DCGANLikeModelWithChannelConditioning(data_channels=1, 
-                                                latent_dim=args.latent_dim, 
-                                                intermediate_dim=args.intermediate_dim, 
-                                                embedding_dim=args.embedding_dim)
+    if args.conditioning == 'filter':
+        net = CIGNWithFilterConditioning(
+            data_channels=1, 
+            latent_dim=args.latent_dim, 
+            intermediate_dim=args.intermediate_dim, 
+            embedding_dim=args.embedding_dim
+        )
+    else: # channel is default
+        net = CIGNWithChannelConditioning(
+            data_channels=1, 
+            latent_dim=args.latent_dim, 
+            intermediate_dim=args.intermediate_dim, 
+            embedding_dim=args.embedding_dim
+        )
     model = IdempotentNetworkWithConditioning(prior, net, args.learning_rate)
     
     return model
@@ -92,7 +104,7 @@ def train_model(args, model, train_dataloader, val_dataloader):
       ModelCheckpoint(
           monitor="val/loss",
           mode="min",
-          dirpath=f"checkpoints_with_channel_conditioning/{logging_timestamp}",
+          dirpath=f"checkpoints_with_{args.conditioning}_conditioning/{logging_timestamp}",
           filename="{epoch}_best_checkpoint",
           every_n_epochs = 1,
           verbose = True,
@@ -103,8 +115,8 @@ def train_model(args, model, train_dataloader, val_dataloader):
       strategy="ddp",
       accelerator="auto",
       max_epochs=args.num_epochs,
-      logger=TensorBoardLogger(f"channel_conditioning/{logging_timestamp}", 
-                               name=f"CIGN_with_channel_conditioning_{logging_timestamp}"),
+      logger=TensorBoardLogger(f"{args.conditioning}_conditioning/{logging_timestamp}", 
+                               name=f"CIGN_with_{args.conditioning}_conditioning_{logging_timestamp}"),
       callbacks=callbacks,
     )
 
