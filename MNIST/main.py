@@ -15,7 +15,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback
 
 from model_with_channel_conditioning import DCGANLikeModelWithChannelConditioning
-from idempotent_networks_v2 import IdempotentNetworkWithConditioning
+from idempotent_networks import IdempotentNetworkWithConditioning
 
 
 def argument_parser():
@@ -94,7 +94,7 @@ def train_model(args, model, train_dataloader, val_dataloader):
           mode="min",
           dirpath=f"checkpoints_with_channel_conditioning/{logging_timestamp}",
           filename="{epoch}_best_checkpoint",
-          every_n_epochs = 5,
+          every_n_epochs = 1,
           verbose = True,
       )
     ]
@@ -104,7 +104,7 @@ def train_model(args, model, train_dataloader, val_dataloader):
       accelerator="auto",
       max_epochs=args.num_epochs,
       logger=TensorBoardLogger(f"channel_conditioning/{logging_timestamp}", 
-                               name=f"DCGAN_with_channel_conditioning_{logging_timestamp}"),
+                               name=f"CIGN_with_channel_conditioning_{logging_timestamp}"),
       callbacks=callbacks,
     )
 
