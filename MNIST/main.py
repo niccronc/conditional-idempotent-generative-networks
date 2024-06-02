@@ -14,8 +14,8 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback
 
-from model_with_channel_conditioning import CIGNWithChannelConditioning
-from model_with_filter_conditioning import CIGNWithFilterConditioning
+from CIGN_channel.model_with_channel_conditioning import CIGNWithChannelConditioning
+from CIGN_filter.model_with_filter_conditioning import CIGNWithFilterConditioning
 from idempotent_networks import IdempotentNetworkWithConditioning
 
 

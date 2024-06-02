@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from discriminator_with_filter_conditioning import DiscriminatorWithFilterConditioning
-from generator_with_filter_conditioning import GeneratorWithFilterConditioning
+from CIGN_filter.discriminator_with_filter_conditioning import DiscriminatorWithFilterConditioning
+from CIGN_filter.generator_with_filter_conditioning import GeneratorWithFilterConditioning
 
 class CIGNWithFilterConditioning(nn.Module):
     def __init__(self, data_channels=1, latent_dim=64, intermediate_dim=512, embedding_dim=5):
