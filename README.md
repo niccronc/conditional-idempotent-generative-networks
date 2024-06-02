@@ -1,5 +1,5 @@
 # idempotent-generative-networks
-This repo provides supporting code to the `Conditional Idempotent Generative Networks` paper by Niccolo' Ronchetti.
+This repo provides supporting code to the `Conditional Idempotent Generative Networks` paper.
 
 The MNIST folder contains the code needed to train your own CIGN, as follows.
 Clone the repo and move to the MNIST folder.
