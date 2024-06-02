@@ -1,15 +1,15 @@
 import torch
 import torch.nn as nn
 
-from discriminator_with_channel_conditioning import DCGANDiscriminatorWithChannelConditioning
-from generator_with_channel_conditioning import DCGANGeneratorWithChannelConditioning
+from discriminator_with_channel_conditioning import DiscriminatorWithChannelConditioning
+from generator_with_channel_conditioning import GeneratorWithChannelConditioning
 
-class DCGANLikeModelWithChannelConditioning(nn.Module):
+class CIGNWithChannelConditioning(nn.Module):
     def __init__(self, data_channels=1, latent_dim=64, intermediate_dim=512, embedding_dim=5):
-        super(DCGANLikeModelWithChannelConditioning, self).__init__()
-        self.discriminator = DCGANDiscriminatorWithChannelConditioning(
+        super(CIGNWithChannelConditioning, self).__init__()
+        self.discriminator = DiscriminatorWithChannelConditioning(
             input_channels=data_channels, latent_dim=latent_dim, output_dim=intermediate_dim, embedding_dim=embedding_dim)
-        self.generator = DCGANGeneratorWithChannelConditioning(
+        self.generator = GeneratorWithChannelConditioning(
             input_dim=intermediate_dim, output_channels=data_channels, latent_dim=latent_dim, embedding_dim=embedding_dim)
 
     def forward(self, x, y):

@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class DCGANGeneratorWithChannelConditioning(nn.Module):
+class GeneratorWithChannelConditioning(nn.Module):
     def __init__(self, input_dim=512, output_channels=1, latent_dim=64, embedding_dim=5):
-        super(DCGANGeneratorWithChannelConditioning, self).__init__()
+        super(GeneratorWithChannelConditioning, self).__init__()
         self.input_dim = input_dim
         self.output_channels = output_channels
         self.latent_dim = latent_dim

@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class DCGANDiscriminatorWithChannelConditioning(nn.Module):
+class DiscriminatorWithChannelConditioning(nn.Module):
     def __init__(self, input_channels=1, latent_dim=64, output_dim=512, embedding_dim=5):
-        super(DCGANDiscriminatorWithChannelConditioning, self).__init__()
+        super(DiscriminatorWithChannelConditioning, self).__init__()
         self.input_channels = input_channels
         self.latent_dim = latent_dim
         self.output_dim = output_dim
